@@ -4,7 +4,7 @@
 
 第一阶段rust基础知识（9/30-10/18）
 
-[rust-rustlings-2024-autumn-nusakom]（https://github.com/LearningOS/rust-rustlings-2024-autumn-nusakom）；
+[rust-rustlings-2024-autumn-nusakom]https://github.com/LearningOS/rust-rustlings-2024-autumn-nusakom
 
 此阶段完成110题rustlings（这一次从30题开始），blog以笔记和做题解析的形式记录。
 
