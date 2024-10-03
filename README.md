@@ -212,7 +212,7 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
 }
 ```
 这个程序定义了一个 `build_scores_table` 函数，它解析比赛结果并构建一个包含各球队得分和失分的哈希表。对于每场比赛，函数提取出两个球队的名称及其得分，并更新对应球队的 `goals_scored` 和 `goals_conceded` 数据。如果球队不在哈希表中，它会被初始化。最终，函数返回这个哈希表，其中每个球队都记录了他们的进球和失球情况。
-- **测试2**：
+- **46测试2**：
 ```RUST
 pub enum Command {
     Uppercase,
@@ -284,7 +284,7 @@ Type Option 表示一个可选值：每个 Option 要么是 Some 并包含一个
 - Swapping things out of difficult situations
 - 从困难的境地中换出
 
-- **Options1**:
+- **47Options1**:
 `Option` 类型是 Rust 中用于处理可能为空或无效值的一种枚举类型。它有两个变体：
 
 1. `Some(T)`：表示有一个有效的值 `T`。
@@ -310,7 +310,7 @@ fn maybe_icecream(time_of_day: u16) -> Option<u16> {
 }
 ```
 通过 `Option`，Rust 避免了像空指针（null pointer）那样的错误处理机制，使得函数能够显式地处理缺失值情况。
-- **Options2**:
+- **48Options2**:
 ```RUST
 #[cfg(test)]
 mod tests {
@@ -358,7 +358,7 @@ mod tests {
 
 #### 总结
 这段代码展示了 `Option` 类型的基本使用。`if let` 和 `while let` 是用于处理 `Option` 内部值的简便方法，通过模式匹配的方式解构 `Some`，使得对 `Option` 的处理更加直观。
-- **Options3**:
+- **49Options3**:
 在这段代码中，使用了 `match` 来处理 `Option<Point>`，其中 `Some(p)` 匹配到了值并将 `Point` 解构出来。然而，`match` 会“夺走”匹配到的值的所有权，导致后续再使用该值时出现错误。
 ### 问题分析：
 当使用 `match` 将 `Some(p)` 解构为 `p` 时，`p` 的所有权转移到了 `println!` 语句中。因此，后续的变量 `y` 不再拥有该值的所有权，导致它无法再次被使用。
@@ -405,3 +405,63 @@ fn main() {
 ```
 #### 总结：
 使用 `match` 解构 `Option` 时，如果直接解构内部的值，会导致所有权的丧失，后续无法再使用该值。为避免这个问题，可以使用 `&` 引用或 `as_ref()` 方法来借用而不转移所有权，从而在后续的代码中仍然可以使用该值。
+
+### Error handling 错误处理
+Most errors aren’t serious enough to require the program to stop entirely. Sometimes, when a function fails, it’s for a reason that you can easily interpret and respond to. For example, if you try to open a file and that operation fails because the file doesn’t exist, you might want to create the file instead of terminating the process.
+
+大多数错误没有严重到需要程序完全停止的程度。有时，当函数失败时，你可以轻松解释和响应的原因。例如，如果您尝试打开某个文件，但该操作由于该文件不存在而失败，则可能需要创建该文件，而不是终止进程。
+
+-**50_errors1**:
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generates_nametag_text_for_a_nonempty_name() {
+        assert_eq!(
+            generate_nametag_text("Beyoncé".into()),
+            Some("Hi! My name is Beyoncé".into()) // 修改为 Some
+        );
+    }
+
+    #[test]
+    fn explains_why_generating_nametag_text_fails() {
+        assert_eq!(
+            generate_nametag_text("".into()),
+            None // 修改为 None
+        );
+    }
+}
+```
+1. **返回值类型为 `Option<String>`**：`generate_nametag_text` 函数的返回类型是 `Option<String>`，用于表示可能的成功或失败情况。若输入的名称为空字符串，函数返回 `None`，表示无法生成名牌文本。
+
+2. **异常判断的使用**：在测试中，通过 `assert_eq!` 语句验证了 `generate_nametag_text` 函数在处理有效和无效输入时的行为。有效输入（非空字符串）返回 `Some` 类型的值，包含生成的名牌文本；无效输入（空字符串）返回 `None`，指示失败。
+
+3. **与空判断的相似性**：异常判断的逻辑与前面的空判断相似，均使用 `Option` 枚举来简化错误处理和控制流，使得代码更加清晰、易于维护。
+-**51_errors2**:
+```rust
+use std::num::ParseIntError;
+
+pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
+    let processing_fee = 1;
+    let cost_per_item = 5;
+
+    // 解析数量，并使用 match 处理可能的错误
+    let qty = item_quantity.parse::<i32>()?;
+
+    // 计算并返回总费用
+    Ok(qty * cost_per_item + processing_fee)
+}
+```
+`total_cost` 函数计算项目的总费用，接收一个表示数量的字符串切片作为输入，并返回一个 `Result<i32, ParseIntError>` 类型的结果。
+函数内部定义了处理费用和每个项目的费用。它使用 `parse::<i32>()` 方法尝试将输入字符串解析为 `i32` 类型，并通过 `?` 操作符简化了错误处理，如果解析失败则返回错误。
+在成功解析后，函数计算并返回总费用，即数量乘以单个项目费用加上处理费用。
+这样的设计确保了在输入无效时程序不会崩溃，同时提高了代码的可读性和简洁性。
+-**52_errors3**:
+
+-**53_errors4**:
+
+-**54_errors5**:
+
+-**55_errors6**:
