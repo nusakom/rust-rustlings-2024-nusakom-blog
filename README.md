@@ -54,7 +54,7 @@ Rust 有三种结构类型：经典 C 结构、元组结构和单元结构。
 #### Enums 枚举
 在Rust中，枚举（enum）是一种用于定义一组相关值的类型。枚举允许你定义一种类型，它可以是不同的变体（variants），每个变体可以包含不同的数据。
 - **第33题**： 
-```
+```rust
   enum Message {
     Quit,
     Echo(String),
@@ -69,7 +69,7 @@ Move { x: i32, y: i32 }, // 带有 x 和 y 的结构体变体
 ChangeColor(i32, i32, i32), // 带有三个 i32 的变体（RGB颜色）
 Echo 带有一个字符串，Move 带有 x 和 y 坐标，ChangeColor 带有 RGB 值。这样可以传递更丰富的信息。
 - **第34题**：
-```
+```rust
 enum Message {
     Move { x: i32, y: i32 }, // 带有 x 和 y 的结构体变体
     Echo(String),           // 带有一个字符串数据的变体
@@ -79,7 +79,7 @@ enum Message {
 ```
 定义 Message 枚举的不同变体，以匹配 main 函数中使用的变体。丰富的枚举类型支持，可以支持结构体，元祖等混合使用。
 - **第35题**：
-```
+```rust
 enum Message {
     ChangeColor(u8, u8, u8), // 变体：变体用于改变颜色，携带 RGB 值
     Echo(String),            // 变体：变体用于回显消息，携带一个字符串
@@ -106,7 +106,7 @@ Rust 有两种字符串类型，一个字符串切片 （&str） 和一个拥有
 3、replace_me:
 使用 replace 方法，将字符串中的 "cars" 替换为 "balloons"，并返回新的 String。
 - **第39题**：
-```
+```rust
 fn main() {
     string_slice("blue"); // &str
     string("red".to_string()); // String
@@ -144,3 +144,12 @@ In this section we'll give you an introduction to Rust's module system.
 2、别名: 在 use 语句中将 PEAR 和 CUCUMBER 分别重命名为 fruit 和 veggie，这样在 main 函数中可以直接使用
 - **第42题**：
 use std::time::{SystemTime, UNIX_EPOCH};: 这行代码同时引入了 SystemTime 和 UNIX_EPOCH，满足了题目的要求。
+
+### Hashmaps 哈希图
+- **第43题**：
+
+- **第44题**：
+
+- **第45题**：
+
+- **测试2**：
