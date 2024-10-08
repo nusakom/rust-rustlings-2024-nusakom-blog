@@ -14,6 +14,147 @@
 
 （注：此文档以时间逆序的顺序记录，方便查阅）
 ### 2024/9/30
+##### Options 选项
+Type Option represents an optional value: every Option is either Some and contains a value, or None, and does not. Option types are very common in Rust code, as they have a number of uses:
+
+Type Option 表示一个可选值：每个 Option 要么是 Some 并包含一个值，要么是 None，但不包含。选项类型在 Rust 代码中非常常见，因为它们有很多用途：
+
+- Initial values 初始值
+- Return values for functions that are not defined over their entire input range (partial functions)
+未在其整个输入范围内定义的函数（部分函数）的返回值
+
+- Return value for otherwise reporting simple errors, where None is returned on error
+否则报告简单错误的返回值，其中 None 在出错时返回 None
+
+- Optional struct fields 可选 struct 字段
+- Struct fields that can be loaned or "taken"
+可以借用或“获取”的结构体字段
+
+- Optional function arguments
+可选函数参数
+
+- Nullable pointers 可为 null 的指针
+- Swapping things out of difficult situations
+从困难的境地中换出
+1.**options1**:
+为了改进 raw_value 测试，应该确保代码在 Option 为 None 的情况下不会 panic。可以使用模式匹配或 unwrap_or 等方法来提供默认值，而不是直接 panic。
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn check_icecream() {
+        assert_eq!(maybe_icecream(9), Some(0));
+        assert_eq!(maybe_icecream(10), Some(5));
+        assert_eq!(maybe_icecream(23), Some(0));
+        assert_eq!(maybe_icecream(22), Some(5));
+        assert_eq!(maybe_icecream(25), None);
+    }
+
+    #[test]
+    fn raw_value() {
+        let icecreams = maybe_icecream(12);
+        // 使用 match 语句避免 panic
+        match icecreams {
+            Some(value) => assert_eq!(value, 5),
+            None => panic!("预期为 Some(5)，但得到 None"),
+        }
+    }
+}
+```
+- 在 raw_value 测试中，我用一个 match 语句替换了 unwrap()，这样可以检查值是否为 Some(value)。如果值为 None，则会带有自定义消息的 panic，而不是无上下文的 panic。
+2.**options2**:
+1. **更具体的测试用例**：
+   - `simple_option` 测试非常直接且有效。你可以考虑添加其他测试，例如对 `None` 的处理，以确保代码的健壮性。
+
+2. **边界情况的处理**：
+   - 在 `layered_option` 测试中，你可以测试边界条件，比如确保向量中至少有一个 `None` 元素时的行为。
+
+3. **测试信息更明确**：
+   - 你可以在 `assert_eq!` 中添加一些描述性信息，帮助识别测试失败的原因。
+
+```rust
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn simple_option() {
+        let target = "rustlings";
+        let optional_target = Some(target);
+
+        // 使用 if let 来匹配 Some(value) 模式
+        if let Some(word) = optional_target {
+            assert_eq!(word, target, "预期值与目标不匹配");
+        }
+
+        // 测试 None 情况
+        let optional_none: Option<&str> = None;
+        assert!(optional_none.is_none(), "预期为 None");
+    }
+
+    #[test]
+    fn layered_option() {
+        let range = 10;
+        let mut optional_integers: Vec<Option<i8>> = vec![None];
+
+        for i in 1..=range {
+            optional_integers.push(Some(i));
+        }
+
+        let mut cursor = range;
+
+        // 使用 while let 来处理 Vec 中的 Option<i8>
+        while let Some(Some(integer)) = optional_integers.pop() {
+            assert_eq!(integer, cursor, "预期为 {}, 但得到 {}", cursor, integer);
+            cursor -= 1;
+        }
+
+        // 测试最后 cursor 的值
+        assert_eq!(cursor, 0, "cursor 预期为 0");
+        
+        // 确保向量最终包含 None
+        assert!(optional_integers.contains(&None), "向量中应包含 None");
+    }
+}
+```
+3.**opyions3**:
+1. **处理 `None` 的情况**：
+   - 在生产代码中，触发 `panic` 通常不是最佳实践。可以考虑更优雅的错误处理方式，例如打印提示信息或返回默认值。
+
+2. **使用 `if let` 语句**：
+   - 对于简单的模式匹配，你可以使用 `if let` 语句，这样代码会更简洁。
+
+3. **添加更多功能**：
+   - 可以添加一些方法来增强 `Point` 结构体的功能，比如计算两点之间的距离等。
+```rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl Point {
+    // 示例：计算与另一点的距离
+    fn distance(&self, other: &Point) -> f64 {
+        (((self.x - other.x).pow(2) + (self.y - other.y).pow(2)) as f64).sqrt()
+    }
+}
+
+fn main() {
+    let y: Option<Point> = Some(Point { x: 100, y: 200 });
+
+    if let Some(p) = y {
+        println!("Co-ordinates are {},{}", p.x, p.y);
+        
+        // 例如，计算与另一个点的距离
+        let other_point = Point { x: 50, y: 50 };
+        println!("Distance to point ({}, {}) is {}", other_point.x, other_point.y, p.distance(&other_point));
+    } else {
+        println!("No point available.");
+    }
+
+    let _ = y; // 使用 let _ 来抑制未使用变量的警告
+}
+```
 ##### 结构体（Structs）
 Rust 有三种结构类型：经典 C 结构、元组结构和单元结构。
 1. **常规结构体（Regular Struct）**：
