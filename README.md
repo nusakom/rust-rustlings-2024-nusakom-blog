@@ -7,9 +7,8 @@
 [rust-rustlings-2024-autumn-nusakom]https://github.com/LearningOS/rust-rustlings-2024-autumn-nusakom
 
 此阶段完成110题rustlings（这一次从30题开始），blog以笔记和做题解析的形式记录。
-[rustlings_blog]()
+[rustlings_blog](https://github.com/nusakom/rust-rustlings-2024-nusakom-blog/tree/main/rustlings_blog)
 第二阶段r core(10/21-11/8)；
 
 第三阶段（12/2-12/22）；
 
-（注：此文档以时间逆序的顺序记录，方便查阅）
